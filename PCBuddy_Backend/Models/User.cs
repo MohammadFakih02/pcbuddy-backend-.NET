@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCBuilderApi.Models
+namespace PCBuddy.Models
 {
     public class User
     {

@@ -1,4 +1,4 @@
-﻿namespace PCBuilderApi.Models
+﻿namespace PCBuddy.Models
 {
     public class PersonalPC
     {
