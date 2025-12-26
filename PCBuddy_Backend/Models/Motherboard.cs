@@ -1,4 +1,4 @@
-﻿namespace PCBuddy.Models
+﻿namespace PCBuddy_Backend.Models
 {
     public class Motherboard
     {

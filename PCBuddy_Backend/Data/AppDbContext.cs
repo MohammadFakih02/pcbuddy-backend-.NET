@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PCBuddy.Models;
+using PCBuddy_Backend.Models;
 
-namespace PCBuddy.Data
+namespace PCBuddy_Backend.Data
 {
     public class AppDbContext : DbContext
     {

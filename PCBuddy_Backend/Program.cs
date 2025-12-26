@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PCBuddy.Data;
+using PCBuddy_Backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,5 +69,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($" Database connection failed: {ex.Message}");
     }
 }
+app.MapGet("hello", () => "hello");
 
 app.Run();

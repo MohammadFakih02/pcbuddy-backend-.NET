@@ -1,8 +1,8 @@
 ﻿
-using PCBuddy.Models;
+using PCBuddy_Backend.Models;
 using System.Text.Json;
 
-namespace PCBuddy.Data
+namespace PCBuddy_Backend.Data
 {
     public static class DataSeeder
     {
