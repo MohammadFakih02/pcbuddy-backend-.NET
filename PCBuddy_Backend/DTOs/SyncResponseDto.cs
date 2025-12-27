@@ -8,6 +8,7 @@
         List<MotherboardDto> Motherboards,
         List<PowerSupplyDto> PowerSupplies,
         List<CaseDto> Cases,
-        string Version
+        List<GameSyncDto> Games,
+        string version
     );
 }

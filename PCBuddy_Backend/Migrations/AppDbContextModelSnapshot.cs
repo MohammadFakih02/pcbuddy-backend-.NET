@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PCBuddy.Data;
+using PCBuddy_Backend.Data;
 
 #nullable disable
 
@@ -22,7 +22,7 @@ namespace PCBuddy_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PCBuddy.Models.AdminLog", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.AdminLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("AdminLogs");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Case", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Case", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,7 +120,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Cases");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Cpu", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Cpu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,7 +194,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Cpus");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Game", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -232,7 +232,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Gpu", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Gpu", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,7 +306,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Gpus");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Memory", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Memory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -365,7 +365,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Memory");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Motherboard", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Motherboard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -445,7 +445,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Motherboards");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.PersonalPC", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.PersonalPC", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,7 +525,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("PersonalPCs");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.PowerSupply", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.PowerSupply", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -605,7 +605,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("PowerSupplies");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.PrebuiltPC", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.PrebuiltPC", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -675,7 +675,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("PrebuiltPCs");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.Storage", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.Storage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -719,7 +719,7 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Storages");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.User", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -772,15 +772,15 @@ namespace PCBuddy_Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.AdminLog", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.AdminLog", b =>
                 {
-                    b.HasOne("PCBuddy.Models.User", "Admin")
+                    b.HasOne("PCBuddy_Backend.Models.User", "Admin")
                         .WithMany("AdminLogs")
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PCBuddy.Models.User", "User")
+                    b.HasOne("PCBuddy_Backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
@@ -789,41 +789,41 @@ namespace PCBuddy_Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.PersonalPC", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.PersonalPC", b =>
                 {
-                    b.HasOne("PCBuddy.Models.Case", "Case")
+                    b.HasOne("PCBuddy_Backend.Models.Case", "Case")
                         .WithMany()
                         .HasForeignKey("CaseId");
 
-                    b.HasOne("PCBuddy.Models.Cpu", "Cpu")
+                    b.HasOne("PCBuddy_Backend.Models.Cpu", "Cpu")
                         .WithMany()
                         .HasForeignKey("CpuId");
 
-                    b.HasOne("PCBuddy.Models.Gpu", "Gpu")
+                    b.HasOne("PCBuddy_Backend.Models.Gpu", "Gpu")
                         .WithMany()
                         .HasForeignKey("GpuId");
 
-                    b.HasOne("PCBuddy.Models.Memory", "Memory")
+                    b.HasOne("PCBuddy_Backend.Models.Memory", "Memory")
                         .WithMany()
                         .HasForeignKey("MemoryId");
 
-                    b.HasOne("PCBuddy.Models.Motherboard", "Motherboard")
+                    b.HasOne("PCBuddy_Backend.Models.Motherboard", "Motherboard")
                         .WithMany()
                         .HasForeignKey("MotherboardId");
 
-                    b.HasOne("PCBuddy.Models.PowerSupply", "PowerSupply")
+                    b.HasOne("PCBuddy_Backend.Models.PowerSupply", "PowerSupply")
                         .WithMany()
                         .HasForeignKey("PowerSupplyId");
 
-                    b.HasOne("PCBuddy.Models.Storage", "Storage")
+                    b.HasOne("PCBuddy_Backend.Models.Storage", "Storage")
                         .WithMany()
                         .HasForeignKey("StorageId");
 
-                    b.HasOne("PCBuddy.Models.Storage", "Storage2")
+                    b.HasOne("PCBuddy_Backend.Models.Storage", "Storage2")
                         .WithMany()
                         .HasForeignKey("StorageId2");
 
-                    b.HasOne("PCBuddy.Models.User", "User")
+                    b.HasOne("PCBuddy_Backend.Models.User", "User")
                         .WithMany("PersonalPCs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -848,43 +848,43 @@ namespace PCBuddy_Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.PrebuiltPC", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.PrebuiltPC", b =>
                 {
-                    b.HasOne("PCBuddy.Models.Case", "Case")
+                    b.HasOne("PCBuddy_Backend.Models.Case", "Case")
                         .WithMany()
                         .HasForeignKey("CaseId");
 
-                    b.HasOne("PCBuddy.Models.Cpu", "Cpu")
+                    b.HasOne("PCBuddy_Backend.Models.Cpu", "Cpu")
                         .WithMany()
                         .HasForeignKey("CpuId");
 
-                    b.HasOne("PCBuddy.Models.User", "Engineer")
+                    b.HasOne("PCBuddy_Backend.Models.User", "Engineer")
                         .WithMany("EngineeredPCs")
                         .HasForeignKey("EngineerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PCBuddy.Models.Gpu", "Gpu")
+                    b.HasOne("PCBuddy_Backend.Models.Gpu", "Gpu")
                         .WithMany()
                         .HasForeignKey("GpuId");
 
-                    b.HasOne("PCBuddy.Models.Memory", "Memory")
+                    b.HasOne("PCBuddy_Backend.Models.Memory", "Memory")
                         .WithMany()
                         .HasForeignKey("MemoryId");
 
-                    b.HasOne("PCBuddy.Models.Motherboard", "Motherboard")
+                    b.HasOne("PCBuddy_Backend.Models.Motherboard", "Motherboard")
                         .WithMany()
                         .HasForeignKey("MotherboardId");
 
-                    b.HasOne("PCBuddy.Models.PowerSupply", "PowerSupply")
+                    b.HasOne("PCBuddy_Backend.Models.PowerSupply", "PowerSupply")
                         .WithMany()
                         .HasForeignKey("PowerSupplyId");
 
-                    b.HasOne("PCBuddy.Models.Storage", "Storage")
+                    b.HasOne("PCBuddy_Backend.Models.Storage", "Storage")
                         .WithMany()
                         .HasForeignKey("StorageId");
 
-                    b.HasOne("PCBuddy.Models.Storage", "Storage2")
+                    b.HasOne("PCBuddy_Backend.Models.Storage", "Storage2")
                         .WithMany()
                         .HasForeignKey("StorageId2");
 
@@ -907,7 +907,7 @@ namespace PCBuddy_Backend.Migrations
                     b.Navigation("Storage2");
                 });
 
-            modelBuilder.Entity("PCBuddy.Models.User", b =>
+            modelBuilder.Entity("PCBuddy_Backend.Models.User", b =>
                 {
                     b.Navigation("AdminLogs");
 
