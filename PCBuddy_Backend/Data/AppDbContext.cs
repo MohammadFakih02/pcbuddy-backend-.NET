@@ -22,6 +22,8 @@ namespace PCBuddy_Backend.Data
         public DbSet<AdminLog> AdminLogs { get; set; }
         public DbSet<Game> Games { get; set; }
 
+        public DbSet<SystemSetting> SystemSettings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -71,6 +73,14 @@ namespace PCBuddy_Backend.Data
                 .HasOne(p => p.Storage2)
                 .WithMany()
                 .HasForeignKey(p => p.StorageId2);
+
+            modelBuilder.Entity<SystemSetting>().HasData(
+                 new SystemSetting
+                {
+                    SettingKey = "DataVersion",
+                    SettingValue = "1.0.0"
+                }
+            );
         }
     }
 }

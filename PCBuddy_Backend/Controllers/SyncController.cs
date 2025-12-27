@@ -16,9 +16,15 @@ namespace PCBuddy.Controllers
         }
 
         [HttpGet("reference-data")]
-        public async Task<ActionResult<SyncResponseDto>> GetReferenceData()
+        public async Task<ActionResult<SyncResponseDto>> GetReferenceData([FromQuery] string? currentVersion)
         {
-            var result = await _syncService.GetReferenceDataAsync();
+            var result = await _syncService.GetReferenceDataAsync(currentVersion);
+
+            if (result == null)
+            {
+                return StatusCode(304);
+            }
+
             return Ok(result);
         }
     }

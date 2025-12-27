@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient; // Use this, remove System.Data.SqlClient
 using PCBuddy_Backend.DTOs;
-using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace PCBuddy_Backend.Services
 {
@@ -13,65 +13,62 @@ namespace PCBuddy_Backend.Services
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<SyncResponseDto> GetReferenceDataAsync()
+        public async Task<SyncResponseDto?> GetReferenceDataAsync(string? clientVersion)
         {
-            var cpus = new List<CpuDto>();
-            var gpus = new List<GpuDto>();
-            var memories = new List<MemoryDto>();
-            var storages = new List<StorageDto>();
-            var motherboards = new List<MotherboardDto>();
-            var powerSupplies = new List<PowerSupplyDto>();
-            var cases = new List<CaseDto>();
-            var games = new List<GameSyncDto>();
-
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            async Task<List<T>> ReadParts<T>(string query, Func<SqlDataReader, T> map)
+            string serverVersion = "1.0.0";
+            string versionQuery = "SELECT SettingValue FROM SystemSettings WHERE SettingKey = 'DataVersion'";
+
+            using (var cmd = new SqlCommand(versionQuery, conn))
             {
-                var list = new List<T>();
-                using var cmd = new SqlCommand(query, conn);
-                using var reader = await cmd.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                var result = await cmd.ExecuteScalarAsync();
+                if (result != null)
                 {
-                    list.Add(map(reader));
+                    serverVersion = result.ToString();
                 }
-                return list;
             }
 
-            cpus = await ReadParts("SELECT Id, Name, Price FROM Cpus", r =>
-                new CpuDto(r.GetInt32(0), r.GetString(1),Convert.ToDecimal(r.GetDouble(2))));
+            if (!string.IsNullOrEmpty(clientVersion) &&
+                string.Equals(clientVersion, serverVersion, StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
 
-            gpus = await ReadParts("SELECT Id, Name, Price FROM Gpus", r =>
+            var cpus = await ReadParts(conn, "SELECT Id, Name, Price FROM Cpus", r =>
+                new CpuDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+
+            var gpus = await ReadParts(conn, "SELECT Id, Name, Price FROM Gpus", r =>
                 new GpuDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            memories = await ReadParts("SELECT Id, Name, Price FROM Memory", r =>
+            var memories = await ReadParts(conn, "SELECT Id, Name, Price FROM Memory", r =>
                 new MemoryDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            storages = await ReadParts("SELECT Id, Name, Price FROM Storages", r =>
+            var storages = await ReadParts(conn, "SELECT Id, Name, Price FROM Storages", r =>
                 new StorageDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            motherboards = await ReadParts("SELECT Id, Name, Price FROM Motherboards", r =>
+            var motherboards = await ReadParts(conn, "SELECT Id, Name, Price FROM Motherboards", r =>
                 new MotherboardDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            powerSupplies = await ReadParts("SELECT Id, Name, Price FROM PowerSupplies", r =>
+            var powerSupplies = await ReadParts(conn, "SELECT Id, Name, Price FROM PowerSupplies", r =>
                 new PowerSupplyDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            cases = await ReadParts("SELECT Id, Name, Price FROM Cases", r =>
+            var cases = await ReadParts(conn, "SELECT Id, Name, Price FROM Cases", r =>
                 new CaseDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
 
-            games = await ReadParts(
+            var games = await ReadParts(conn,
                 """
-    SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize
-    FROM Games
-    """,
+                SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize
+                FROM Games
+                """,
                 r => new GameSyncDto(
-                    r.GetInt32(0),                         // Id
-                    r.GetString(1),                        // Name
-                    r.IsDBNull(2) ? null : r.GetString(2), // Cpu
-                    r.IsDBNull(3) ? null : r.GetString(3), // GPU
-                    r.IsDBNull(4) ? null : Convert.ToDecimal(r.GetDouble(4)), // Memory (GB)
-                    r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5))  // FileSize (GB)
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? null : r.GetString(2),
+                    r.IsDBNull(3) ? null : r.GetString(3),
+                    r.IsDBNull(4) ? null : Convert.ToDecimal(r.GetDouble(4)),
+                    r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5))
                 )
             );
 
@@ -84,8 +81,21 @@ namespace PCBuddy_Backend.Services
                 powerSupplies,
                 cases,
                 games,
-                version: "2025.01"
+                serverVersion
             );
+        }
+
+
+        private async Task<List<T>> ReadParts<T>(SqlConnection conn, string query, Func<SqlDataReader, T> map)
+        {
+            var list = new List<T>();
+            using var cmd = new SqlCommand(query, conn);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                list.Add(map(reader));
+            }
+            return list;
         }
     }
 }
