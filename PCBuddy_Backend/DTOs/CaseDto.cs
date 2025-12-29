@@ -3,6 +3,7 @@
     public record CaseDto(
         int Id,
         string Name,
-        decimal Price
+        decimal Price,
+        bool IsDeleted
     );
 }

@@ -19,5 +19,6 @@
         public bool? HeatSpreader { get; set; }
         public int UsageCount { get; set; } = 0;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; set; } = false;
     }
 }

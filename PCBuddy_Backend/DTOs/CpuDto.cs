@@ -3,7 +3,8 @@
     public record CpuDto(
         int Id,
         string Name,
-        decimal Price
+        decimal Price,
+        bool IsDeleted
     );
 
 }

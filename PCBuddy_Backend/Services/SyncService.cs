@@ -22,30 +22,66 @@ namespace PCBuddy_Backend.Services
 
             string dateFilter = lastSync.HasValue ? "WHERE UpdatedAt > @LastSync" : "";
 
-            var cpus = await ReadParts(conn, $"SELECT Id, Name, Price FROM Cpus {dateFilter}", lastSync, r =>
-                new CpuDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var gpus = await ReadParts(conn, $"SELECT Id, Name, Price FROM Gpus {dateFilter}", lastSync, r =>
-                new GpuDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var cpus = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Cpus {dateFilter}", lastSync, r =>
+                new CpuDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
-            var memories = await ReadParts(conn, $"SELECT Id, Name, Price FROM Memory {dateFilter}", lastSync, r =>
-                new MemoryDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var gpus = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Gpus {dateFilter}", lastSync, r =>
+                new GpuDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
-            var storages = await ReadParts(conn, $"SELECT Id, Name, Price FROM Storages {dateFilter}", lastSync, r =>
-                new StorageDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var memories = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Memory {dateFilter}", lastSync, r =>
+                new MemoryDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
-            var motherboards = await ReadParts(conn, $"SELECT Id, Name, Price FROM Motherboards {dateFilter}", lastSync, r =>
-                new MotherboardDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var storages = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Storages {dateFilter}", lastSync, r =>
+                new StorageDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
-            var powerSupplies = await ReadParts(conn, $"SELECT Id, Name, Price FROM PowerSupplies {dateFilter}", lastSync, r =>
-                new PowerSupplyDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var motherboards = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Motherboards {dateFilter}", lastSync, r =>
+                new MotherboardDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
-            var cases = await ReadParts(conn, $"SELECT Id, Name, Price FROM Cases {dateFilter}", lastSync, r =>
-                new CaseDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
+            var powerSupplies = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM PowerSupplies {dateFilter}", lastSync, r =>
+                new PowerSupplyDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
+
+            var cases = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Cases {dateFilter}", lastSync, r =>
+                new CaseDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.GetBoolean(3)
+                ));
 
             var games = await ReadParts(conn,
                 $"""
-                SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize
+                SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize, IsDeleted
                 FROM Games
                 {dateFilter}
                 """,
@@ -56,7 +92,8 @@ namespace PCBuddy_Backend.Services
                     r.IsDBNull(2) ? null : r.GetString(2),
                     r.IsDBNull(3) ? null : r.GetString(3),
                     r.IsDBNull(4) ? null : Convert.ToDecimal(r.GetDouble(4)),
-                    r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5))
+                    r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5)),
+                    r.GetBoolean(6)
                 )
             );
 
@@ -69,7 +106,7 @@ namespace PCBuddy_Backend.Services
                 powerSupplies,
                 cases,
                 games,
-                syncTimestamp.ToString("o") // ISO 8601 Format
+                syncTimestamp.ToString("o")
             );
         }
 
@@ -80,7 +117,7 @@ namespace PCBuddy_Backend.Services
 
             if (lastSync.HasValue)
             {
-                cmd.Parameters.AddWithValue("@LastSync", lastSync.Value);
+                cmd.Parameters.Add(new SqlParameter("@LastSync", System.Data.SqlDbType.DateTime2) { Value = lastSync.Value });
             }
 
             using var reader = await cmd.ExecuteReaderAsync();

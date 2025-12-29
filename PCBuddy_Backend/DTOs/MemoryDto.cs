@@ -3,6 +3,7 @@
     public record MemoryDto(
         int Id,
         string Name,
-        decimal Price
+        decimal Price,
+        bool IsDeleted
     );
 }

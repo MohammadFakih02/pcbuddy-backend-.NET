@@ -6,6 +6,7 @@
         string? MinCpu,
         string? MinGpu,
         decimal? MinMemoryGb,
-        decimal? RequiredStorageGb
+        decimal? RequiredStorageGb,
+        bool IsDeleted
     );
 }
