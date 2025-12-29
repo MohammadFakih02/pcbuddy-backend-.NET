@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class Motherboard
+    public class Motherboard: ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -25,5 +25,6 @@
         public string? Socket { get; set; }
         public string? FormFactor { get; set; }
         public int UsageCount { get; set; } = 0;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

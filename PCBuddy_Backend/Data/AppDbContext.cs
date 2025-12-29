@@ -9,6 +9,27 @@ namespace PCBuddy_Backend.Data
         { 
         }
 
+        public override int SaveChanges()
+        {
+            UpdateTimestamps();
+            return base.SaveChanges();
+        }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+        private void UpdateTimestamps()
+        {
+            var entries = ChangeTracker.Entries<ITrackable>()
+                .Where(e => e.State == EntityState.Modified || e.State == EntityState.Added);
+
+            foreach (var entry in entries)
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Cpu> Cpus { get; set; }
         public DbSet<Gpu> Gpus { get; set; }
@@ -22,7 +43,6 @@ namespace PCBuddy_Backend.Data
         public DbSet<AdminLog> AdminLogs { get; set; }
         public DbSet<Game> Games { get; set; }
 
-        public DbSet<SystemSetting> SystemSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -73,14 +93,6 @@ namespace PCBuddy_Backend.Data
                 .HasOne(p => p.Storage2)
                 .WithMany()
                 .HasForeignKey(p => p.StorageId2);
-
-            modelBuilder.Entity<SystemSetting>().HasData(
-                 new SystemSetting
-                {
-                    SettingKey = "DataVersion",
-                    SettingValue = "1.0.0"
-                }
-            );
         }
     }
 }

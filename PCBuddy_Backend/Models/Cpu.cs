@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class Cpu
+    public class Cpu:ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -23,5 +23,6 @@
         public double? MaxSupportedMemory { get; set; }
         public bool? SimultaneousMultithreading { get; set; }
         public int UsageCount { get; set; } = 0;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

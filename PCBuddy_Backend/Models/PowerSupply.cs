@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class PowerSupply
+    public class PowerSupply: ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -25,5 +25,6 @@
         public int? Pcie8PinConnectors { get; set; }
         public int? SataConnectors { get; set; }
         public int UsageCount { get; set; } = 0;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

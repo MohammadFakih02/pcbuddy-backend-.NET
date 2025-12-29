@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class Storage
+    public class Storage:ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -13,5 +13,6 @@
         public string? Cache { get; set; }
         public string? FormFactor { get; set; }
         public int UsageCount { get; set; } = 0;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

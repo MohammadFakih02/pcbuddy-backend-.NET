@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class Game
+    public class Game:ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -8,7 +8,6 @@
         public string? GraphicsCard { get; set; }
         public string? Cpu { get; set; }
         public double? FileSize { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PCBuddy_Backend.Data;
 
@@ -11,9 +12,11 @@ using PCBuddy_Backend.Data;
 namespace PCBuddy_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251229123659_AddUpdatedAtToParts")]
+    partial class AddUpdatedAtToParts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -735,6 +738,29 @@ namespace PCBuddy_Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Storages");
+                });
+
+            modelBuilder.Entity("PCBuddy_Backend.Models.SystemSetting", b =>
+                {
+                    b.Property<string>("SettingKey")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SettingValue")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("SettingKey");
+
+                    b.ToTable("SystemSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            SettingKey = "DataVersion",
+                            SettingValue = "1.0.0"
+                        });
                 });
 
             modelBuilder.Entity("PCBuddy_Backend.Models.User", b =>

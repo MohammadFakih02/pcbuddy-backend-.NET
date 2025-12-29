@@ -1,6 +1,6 @@
 ﻿namespace PCBuddy_Backend.Models
 {
-    public class Case
+    public class Case:ITrackable
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -21,5 +21,6 @@
         public string? ExpansionSlots { get; set; }
         public string? Dimensions { get; set; }
         public int UsageCount { get; set; } = 0;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

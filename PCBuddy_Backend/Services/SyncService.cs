@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient; // Use this, remove System.Data.SqlClient
+﻿using Microsoft.Data.SqlClient;
 using PCBuddy_Backend.DTOs;
 using Microsoft.Extensions.Configuration;
 
@@ -13,55 +13,43 @@ namespace PCBuddy_Backend.Services
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<SyncResponseDto?> GetReferenceDataAsync(string? clientVersion)
+        public async Task<SyncResponseDto> GetReferenceDataAsync(DateTime? lastSync)
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string serverVersion = "1.0.0";
-            string versionQuery = "SELECT SettingValue FROM SystemSettings WHERE SettingKey = 'DataVersion'";
+            DateTime syncTimestamp = DateTime.UtcNow;
 
-            using (var cmd = new SqlCommand(versionQuery, conn))
-            {
-                var result = await cmd.ExecuteScalarAsync();
-                if (result != null)
-                {
-                    serverVersion = result.ToString();
-                }
-            }
+            string dateFilter = lastSync.HasValue ? "WHERE UpdatedAt > @LastSync" : "";
 
-            if (!string.IsNullOrEmpty(clientVersion) &&
-                string.Equals(clientVersion, serverVersion, StringComparison.OrdinalIgnoreCase))
-            {
-                return null;
-            }
+            var cpus = await ReadParts(conn, $"SELECT Id, Name, Price FROM Cpus {dateFilter}", lastSync, r =>
+                new CpuDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var cpus = await ReadParts(conn, "SELECT Id, Name, Price FROM Cpus", r =>
-                new CpuDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var gpus = await ReadParts(conn, $"SELECT Id, Name, Price FROM Gpus {dateFilter}", lastSync, r =>
+                new GpuDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var gpus = await ReadParts(conn, "SELECT Id, Name, Price FROM Gpus", r =>
-                new GpuDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var memories = await ReadParts(conn, $"SELECT Id, Name, Price FROM Memory {dateFilter}", lastSync, r =>
+                new MemoryDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var memories = await ReadParts(conn, "SELECT Id, Name, Price FROM Memory", r =>
-                new MemoryDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var storages = await ReadParts(conn, $"SELECT Id, Name, Price FROM Storages {dateFilter}", lastSync, r =>
+                new StorageDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var storages = await ReadParts(conn, "SELECT Id, Name, Price FROM Storages", r =>
-                new StorageDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var motherboards = await ReadParts(conn, $"SELECT Id, Name, Price FROM Motherboards {dateFilter}", lastSync, r =>
+                new MotherboardDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var motherboards = await ReadParts(conn, "SELECT Id, Name, Price FROM Motherboards", r =>
-                new MotherboardDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var powerSupplies = await ReadParts(conn, $"SELECT Id, Name, Price FROM PowerSupplies {dateFilter}", lastSync, r =>
+                new PowerSupplyDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
-            var powerSupplies = await ReadParts(conn, "SELECT Id, Name, Price FROM PowerSupplies", r =>
-                new PowerSupplyDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
-
-            var cases = await ReadParts(conn, "SELECT Id, Name, Price FROM Cases", r =>
-                new CaseDto(r.GetInt32(0), r.GetString(1), Convert.ToDecimal(r.GetDouble(2))));
+            var cases = await ReadParts(conn, $"SELECT Id, Name, Price FROM Cases {dateFilter}", lastSync, r =>
+                new CaseDto(r.GetInt32(0), r.GetString(1), r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2))));
 
             var games = await ReadParts(conn,
-                """
+                $"""
                 SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize
                 FROM Games
+                {dateFilter}
                 """,
+                lastSync,
                 r => new GameSyncDto(
                     r.GetInt32(0),
                     r.GetString(1),
@@ -81,15 +69,20 @@ namespace PCBuddy_Backend.Services
                 powerSupplies,
                 cases,
                 games,
-                serverVersion
+                syncTimestamp.ToString("o") // ISO 8601 Format
             );
         }
 
-
-        private async Task<List<T>> ReadParts<T>(SqlConnection conn, string query, Func<SqlDataReader, T> map)
+        private async Task<List<T>> ReadParts<T>(SqlConnection conn, string query, DateTime? lastSync, Func<SqlDataReader, T> map)
         {
             var list = new List<T>();
             using var cmd = new SqlCommand(query, conn);
+
+            if (lastSync.HasValue)
+            {
+                cmd.Parameters.AddWithValue("@LastSync", lastSync.Value);
+            }
+
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
