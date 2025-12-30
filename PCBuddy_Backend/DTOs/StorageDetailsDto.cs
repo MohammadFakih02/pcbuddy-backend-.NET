@@ -4,9 +4,12 @@
         int Id,
         string Name,
         decimal Price,
-        int Capacity,
-        string Type,
-        string Interface
+        double? Capacity,
+        string? Type,
+        string? Cache,
+        string? FormFactor,
+        string? ImageUrl,
+        string? ProductUrl,
+        string PartType = "Storage"
     );
-
 }

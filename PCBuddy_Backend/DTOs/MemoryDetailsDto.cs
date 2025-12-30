@@ -4,9 +4,14 @@
         int Id,
         string Name,
         decimal Price,
-        int Capacity,
-        int Speed,
-        string Type
+        string? Speed,
+        string? Modules,
+        double? PricePerGb,
+        string? Color,
+        double? FirstWordLatency,
+        double? CasLatency,
+        string? ImageUrl,
+        string? ProductUrl,
+        string Type = "Memory"
     );
-
 }

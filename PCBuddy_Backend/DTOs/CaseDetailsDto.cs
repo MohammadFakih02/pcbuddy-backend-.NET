@@ -4,9 +4,14 @@
         int Id,
         string Name,
         decimal Price,
-        string FormFactor,
-        int MaxGpuLength,
-        int MaxCpuCoolerHeight
+        string? Type,
+        string? Color,
+        string? SidePanel,
+        string? MotherboardFormFactor,
+        double? MaxVideoCardLength,
+        string? DriveBays,
+        string? ImageUrl,
+        string? ProductUrl,
+        string PartType = "Case"
     );
-
 }

@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<SyncService>();
+builder.Services.AddScoped<ComputerService>();
 
 var app = builder.Build();
 
@@ -72,6 +73,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($" Database connection failed: {ex.Message}");
     }
 }
-app.MapGet("hello", () => "hello");
+app.MapGet("/", () => "Welcome to PCBuddy API! Use /api/computer/... or /api/sync/...");
 
 app.Run();

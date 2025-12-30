@@ -4,12 +4,15 @@
         int Id,
         string Name,
         decimal Price,
-        int Cores,
-        int Threads,
-        decimal BaseClock,
-        decimal BoostClock,
-        string Socket,
-        int Tdp
+        int? CoreCount,
+        double? PerformanceCoreClock,
+        double? PerformanceCoreBoostClock,
+        string? Socket,
+        string? IntegratedGraphics,
+        string? Series,
+        int? Tdp,
+        string? ImageUrl,
+        string? ProductUrl,
+        string Type = "Cpu"
     );
-
 }
