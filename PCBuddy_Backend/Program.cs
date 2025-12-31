@@ -25,7 +25,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddSingleton<SyncService>();
 builder.Services.AddScoped<ComputerService>();
 builder.Services.AddScoped<AuthService>();
-
+builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpClient<AIService>();
 
 builder.Services.AddAuthentication(options =>
@@ -79,6 +79,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

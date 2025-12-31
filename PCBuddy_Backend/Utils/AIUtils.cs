@@ -32,7 +32,7 @@ namespace PCBuddy_Backend.Utils
                 return default;
             }
         }
-        public static T? FuzzyMatch<T>(IEnumerable<T> items, string searchTerm, Func<T, string> nameSelector, int threshold = 50)
+        public static T? FuzzyMatch<T>(IEnumerable<T> items, string searchTerm, Func<T, string> nameSelector, int threshold = 60)
         {
             if (string.IsNullOrWhiteSpace(searchTerm) || items == null || !items.Any())
                 return default;

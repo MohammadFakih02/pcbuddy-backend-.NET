@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PCBuddy_Backend.DTOs;
 using PCBuddy_Backend.Services;
+using System.Security.Claims;
 
 namespace PCBuddy_Backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/computer")]
     public class ComputerController : ControllerBase
@@ -14,7 +17,6 @@ namespace PCBuddy_Backend.Controllers
         {
             _computerService = computerService;
         }
-
 
         [HttpGet("cpus")]
         public async Task<IActionResult> GetCpus() => Ok(await _computerService.GetCPUs());
@@ -37,7 +39,6 @@ namespace PCBuddy_Backend.Controllers
         [HttpGet("cases")]
         public async Task<IActionResult> GetCases() => Ok(await _computerService.GetCases());
 
-
         [HttpPost("calculate-price")]
         public async Task<IActionResult> CalculatePrice([FromBody] SavePCRequest request)
         {
@@ -46,12 +47,14 @@ namespace PCBuddy_Backend.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<IActionResult> SaveConfiguration([FromQuery] int userId, [FromBody] SavePCRequest request)
+        public async Task<IActionResult> SaveConfiguration([FromBody] SavePCRequest request)
         {
-            if (userId <= 0) return BadRequest("Valid UserId is required.");
-
             try
             {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
+                if (userId <= 0) return Unauthorized();
+
                 var result = await _computerService.SavePCConfiguration(userId, request);
                 return Ok(result);
             }
@@ -62,10 +65,12 @@ namespace PCBuddy_Backend.Controllers
         }
 
         [HttpPut("rate")]
-        public async Task<IActionResult> RatePc([FromQuery] int userId, [FromQuery] int pcId, [FromQuery] double rating)
+        public async Task<IActionResult> RatePc([FromQuery] int pcId, [FromQuery] double rating)
         {
             try
             {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
                 var result = await _computerService.UpdatePCRating(userId, pcId, rating);
                 return Ok(result);
             }
@@ -89,14 +94,12 @@ namespace PCBuddy_Backend.Controllers
             }
         }
 
-
         [HttpPost("part-details")]
         public async Task<IActionResult> GetSystemPartDetails([FromBody] SavePCRequest request)
         {
             var result = await _computerService.GetPartDetails(request);
             return Ok(result);
         }
-
 
         [HttpGet("cpu/{id}")]
         public async Task<IActionResult> GetCpu(int id)

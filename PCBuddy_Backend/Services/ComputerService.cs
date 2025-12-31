@@ -15,13 +15,28 @@ namespace PCBuddy_Backend.Services
             _context = context;
         }
 
-        public async Task<List<Cpu>> GetCPUs() => await _context.Cpus.Select(x => new Cpu { Id = x.Id, Name = x.Name }).ToListAsync();
-        public async Task<List<Gpu>> GetGPUs() => await _context.Gpus.Select(x => new Gpu { Id = x.Id, Name = x.Name, Chipset = x.Chipset }).ToListAsync();
-        public async Task<List<Memory>> GetMemory() => await _context.Memory.Select(x => new Memory { Id = x.Id, Name = x.Name }).ToListAsync();
-        public async Task<List<Storage>> GetStorage() => await _context.Storages.Select(x => new Storage { Id = x.Id, Name = x.Name, Type = x.Type, Capacity = x.Capacity }).ToListAsync();
-        public async Task<List<Motherboard>> GetMotherboards() => await _context.Motherboards.Select(x => new Motherboard { Id = x.Id, Name = x.Name }).ToListAsync();
-        public async Task<List<PowerSupply>> GetPowerSupplies() => await _context.PowerSupplies.Select(x => new PowerSupply { Id = x.Id, Name = x.Name, Wattage = x.Wattage }).ToListAsync();
-        public async Task<List<Case>> GetCases() => await _context.Cases.Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+
+        public async Task<List<Cpu>> GetCPUs() =>
+            await _context.Cpus.Where(x => !x.IsDeleted).Select(x => new Cpu { Id = x.Id, Name = x.Name }).ToListAsync();
+
+        public async Task<List<Gpu>> GetGPUs() =>
+            await _context.Gpus.Where(x => !x.IsDeleted).Select(x => new Gpu { Id = x.Id, Name = x.Name, Chipset = x.Chipset }).ToListAsync();
+
+        public async Task<List<Memory>> GetMemory() =>
+            await _context.Memory.Where(x => !x.IsDeleted).Select(x => new Memory { Id = x.Id, Name = x.Name }).ToListAsync();
+
+        public async Task<List<Storage>> GetStorage() =>
+            await _context.Storages.Where(x => !x.IsDeleted).Select(x => new Storage { Id = x.Id, Name = x.Name, Type = x.Type, Capacity = x.Capacity }).ToListAsync();
+
+        public async Task<List<Motherboard>> GetMotherboards() =>
+            await _context.Motherboards.Where(x => !x.IsDeleted).Select(x => new Motherboard { Id = x.Id, Name = x.Name }).ToListAsync();
+
+        public async Task<List<PowerSupply>> GetPowerSupplies() =>
+            await _context.PowerSupplies.Where(x => !x.IsDeleted).Select(x => new PowerSupply { Id = x.Id, Name = x.Name, Wattage = x.Wattage }).ToListAsync();
+
+        public async Task<List<Case>> GetCases() =>
+            await _context.Cases.Where(x => !x.IsDeleted).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+
 
 
         public async Task<decimal> CalculateTotalPrice(SavePCRequest parts)
@@ -42,9 +57,13 @@ namespace PCBuddy_Backend.Services
 
         public async Task<PersonalPC> SavePCConfiguration(int userId, SavePCRequest parts)
         {
+            if (!await _context.Users.AnyAsync(u => u.Id == userId))
+            {
+                throw new Exception("User not found.");
+            }
+
             var totalPrice = (double)await CalculateTotalPrice(parts);
 
-            // Increment usage counts
             await IncrementUsageCount(parts);
 
             var existingPC = await _context.PersonalPCs.FirstOrDefaultAsync(p => p.UserId == userId);
@@ -124,7 +143,9 @@ namespace PCBuddy_Backend.Services
         public async Task<PersonalPC> UpdatePCRating(int userId, int pcId, double rating)
         {
             var pc = await _context.PersonalPCs.FirstOrDefaultAsync(p => p.Id == pcId && p.UserId == userId);
-            if (pc == null) throw new Exception("PC configuration not found for this user");
+
+            if (pc == null)
+                throw new Exception("PC configuration not found for this user");
 
             pc.Rating = rating;
             pc.UpdatedAt = DateTime.UtcNow;
@@ -217,46 +238,47 @@ namespace PCBuddy_Backend.Services
         }
 
 
+
         public async Task<CpuDetailsDto?> GetCpuById(int id)
         {
             var p = await _context.Cpus.FindAsync(id);
-            return p != null ? MapToCpuDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToCpuDetails(p) : null;
         }
 
         public async Task<GpuDetailsDto?> GetGpuById(int id)
         {
             var p = await _context.Gpus.FindAsync(id);
-            return p != null ? MapToGpuDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToGpuDetails(p) : null;
         }
 
         public async Task<MemoryDetailsDto?> GetMemoryById(int id)
         {
             var p = await _context.Memory.FindAsync(id);
-            return p != null ? MapToMemoryDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToMemoryDetails(p) : null;
         }
 
         public async Task<StorageDetailsDto?> GetStorageById(int id)
         {
             var p = await _context.Storages.FindAsync(id);
-            return p != null ? MapToStorageDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToStorageDetails(p) : null;
         }
 
         public async Task<MotherboardDetailsDto?> GetMotherboardById(int id)
         {
             var p = await _context.Motherboards.FindAsync(id);
-            return p != null ? MapToMotherboardDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToMotherboardDetails(p) : null;
         }
 
         public async Task<PowerSupplyDetailsDto?> GetPowerSupplyById(int id)
         {
             var p = await _context.PowerSupplies.FindAsync(id);
-            return p != null ? MapToPowerSupplyDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToPowerSupplyDetails(p) : null;
         }
 
         public async Task<CaseDetailsDto?> GetCaseById(int id)
         {
             var p = await _context.Cases.FindAsync(id);
-            return p != null ? MapToCaseDetails(p) : null;
+            return (p != null && !p.IsDeleted) ? MapToCaseDetails(p) : null;
         }
 
 

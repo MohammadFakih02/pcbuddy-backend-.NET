@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PCBuddy_Backend.DTOs.AI;
 using PCBuddy_Backend.Services;
 
 namespace PCBuddy_Backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/ai")]
     public class AIController : ControllerBase
