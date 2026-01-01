@@ -1,0 +1,38 @@
+﻿@model PCBuddy_Backend.Models.Game
+@{
+    ViewData["Title"] = "Game Details";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@Model.Name</h2>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">System Requirements</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Minimum CPU</dt>
+                <dd class="col-sm-9">@Model.Cpu</dd>
+
+                <dt class="col-sm-3">Minimum GPU</dt>
+                <dd class="col-sm-9">@Model.GraphicsCard</dd>
+
+                <dt class="col-sm-3">Minimum RAM</dt>
+                <dd class="col-sm-9">@(Model.Memory != null ? Model.Memory + " GB" : "-")</dd>
+
+                <dt class="col-sm-3">Storage Needed</dt>
+                <dd class="col-sm-9">@(Model.FileSize != null ? Model.FileSize + " GB" : "-")</dd>
+
+                <dt class="col-sm-3 text-muted">Last Updated</dt>
+                <dd class="col-sm-9 text-muted">@Model.UpdatedAt.ToLocalTime()</dd>
+            </dl>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿@model PCBuddy_Backend.Models.Game
+@{
+    ViewData["Title"] = "Create Game";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white"><h4 class="mb-0">Add New Game</h4></div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Game Name</label>
+                <input asp-for="Name" class="form-control" placeholder="e.g. Cyberpunk 2077" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <h5 class="mt-4 border-bottom pb-2">Minimum Requirements</h5>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Cpu" class="form-label">Minimum CPU</label>
+                    <input asp-for="Cpu" class="form-control" placeholder="e.g. Intel Core i5-3570K" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="GraphicsCard" class="form-label">Minimum GPU</label>
+                    <input asp-for="GraphicsCard" class="form-control" placeholder="e.g. NVIDIA GeForce GTX 780" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Memory" class="form-label">Minimum RAM (GB)</label>
+                    <input asp-for="Memory" class="form-control" type="number" step="0.1" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FileSize" class="form-label">Storage Required (GB)</label>
+                    <input asp-for="FileSize" class="form-control" type="number" step="0.1" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
