@@ -38,7 +38,6 @@ namespace PCBuddy_Backend.Services
 
             var jsonContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
 
-
             try
             {
                 var response = await _httpClient.PostAsync(url, jsonContent);
@@ -119,9 +118,9 @@ namespace PCBuddy_Backend.Services
                 return AIUtils.FuzzyMatch(list, name, selector, threshold: 60);
             }
 
-
             var matchedCpu = MatchPart(cpus, aiSuggestion.Cpu, x => x.Name);
 
+            // Note: This logic matches the ComputerService update where we combine Name + Chipset for better matching
             var matchedGpu = MatchPart(gpus, aiSuggestion.Gpu, x => $"{x.Name} {x.Chipset}");
 
             var matchedRam = MatchPart(rams, aiSuggestion.Ram, x => x.Name);
@@ -196,7 +195,6 @@ namespace PCBuddy_Backend.Services
 
         public async Task<CompatibilityResponse?> CheckCompatibility(FullSystemRequest system)
         {
-            // We fetch motherboards just to provide suggestions, not to restrict checking
             var motherboards = await _computerService.GetMotherboards();
             var moboNames = string.Join(", ", motherboards.Take(50).Select(m => m.Name));
 

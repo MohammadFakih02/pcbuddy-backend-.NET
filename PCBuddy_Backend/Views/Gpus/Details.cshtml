@@ -1,19 +1,25 @@
 ﻿@using PCBuddy_Backend.Utils
 @model PCBuddy_Backend.Models.Gpu
-
 @{
     ViewData["Title"] = "GPU Details";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>@Model.Name (@Model.Chipset)</h2>
+        <h2>
+            @Model.Name
+            @if (!string.IsNullOrEmpty(Model.Chipset) && !Model.Name.Contains(Model.Chipset, StringComparison.OrdinalIgnoreCase))
+            {
+                <span>(@Model.Chipset)</span>
+            }
+        </h2>
         <div>
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
         </div>
     </div>
 
+    <!-- ... Rest of details view (Image, Specs table) ... -->
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="row">
@@ -25,17 +31,12 @@
                     }
                     else
                     {
+
                         <div class="alert alert-secondary py-5">No Image Available</div>
                     }
 
                     <div class="mt-3">
                         <h3 class="text-success">$@Model.Price</h3>
-                        @if (!string.IsNullOrEmpty(Model.ProductUrl))
-                        {
-                            <a href="@Model.ProductUrl" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
-                                <i class="fas fa-external-link-alt"></i> View Product Page
-                            </a>
-                        }
                     </div>
                 </div>
 
@@ -44,31 +45,19 @@
                     <h5 class="card-title border-bottom pb-2">Specifications</h5>
                     <dl class="row">
                         <dt class="col-sm-4">Manufacturer</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Manufacturer)</dd>
-
+                        <dd class="col-sm-8">@Model.Manufacturer</dd>
                         <dt class="col-sm-4">Chipset</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Chipset)</dd>
-
+                        <dd class="col-sm-8">@Model.Chipset</dd>
                         <dt class="col-sm-4">VRAM</dt>
                         <dd class="col-sm-8">@Model.Memory @Model.MemoryType</dd>
-
+                        <dt class="col-sm-4">TDP</dt>
+                        <dd class="col-sm-8">@Model.Tdp W</dd>
                         <dt class="col-sm-4">Core Clock</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.CoreClock)</dd>
-
+                        <dd class="col-sm-8">@Model.CoreClock</dd>
                         <dt class="col-sm-4">Boost Clock</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.BoostClock)</dd>
-
+                        <dd class="col-sm-8">@Model.BoostClock</dd>
                         <dt class="col-sm-4">Length</dt>
                         <dd class="col-sm-8">@(Model.Length != null ? Model.Length + " mm" : "-")</dd>
-
-                        <dt class="col-sm-4">TDP</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Tdp) W</dd>
-
-                        <dt class="col-sm-4">Power Connectors</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.ExternalPower)</dd>
-
-                        <dt class="col-sm-4">Last Updated</dt>
-                        <dd class="col-sm-8 text-muted">@Model.UpdatedAt.ToLocalTime()</dd>
                     </dl>
                 </div>
             </div>

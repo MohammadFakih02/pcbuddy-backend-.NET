@@ -15,7 +15,6 @@
         <tr>
             <th>Image</th>
             <th>Name</th>
-            <th>Chipset</th>
             <th>Price</th>
             <th>VRAM</th>
             <th>TDP</th>
@@ -23,29 +22,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @if(!string.IsNullOrEmpty(item.ImageUrl))
-                {
-                    <img src="@AIUtils.FormatImageUrl(item.ImageUrl)" style="width: 50px; height: 50px; object-fit: contain;" />
-                }
-                else
-                {
-                    <span class="text-muted">No Img</span>
-                }
-            </td>
-            <td>@Html.DisplayFor(modelItem => item.Name)</td>
-            <td>@Html.DisplayFor(modelItem => item.Chipset)</td>
-            <td>$@Html.DisplayFor(modelItem => item.Price)</td>
-            <td>@item.Memory @item.MemoryType</td>
-            <td>@Html.DisplayFor(modelItem => item.Tdp)W</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@AIUtils.FormatImageUrl(item.ImageUrl)" style="width: 50px; height: 50px; object-fit: contain;" />
+                    }
+                    else
+                    {
+
+                        <span class="text-muted">No Img</span>
+                    }
+                </td>
+                <td>
+                    @item.Name
+                    @if (!string.IsNullOrEmpty(item.Chipset) && !item.Name.Contains(item.Chipset, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <span class="text-muted">(@item.Chipset)</span>
+                    }
+                </td>
+                <td>$@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@item.Memory @item.MemoryType</td>
+                <td>@Html.DisplayFor(modelItem => item.Tdp)W</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

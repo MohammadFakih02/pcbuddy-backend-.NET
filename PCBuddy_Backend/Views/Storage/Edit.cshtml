@@ -1,0 +1,71 @@
+﻿@model PCBuddy_Backend.Models.Storage
+@{
+    ViewData["Title"] = "Edit Storage";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark"><h4 class="mb-0">Edit Storage</h4></div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IsDeleted" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Manufacturer" class="form-label">Manufacturer</label>
+                    <input asp-for="Manufacturer" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Type" class="form-label">Type (SSD/HDD)</label>
+                    <input asp-for="Type" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Capacity" class="form-label">Capacity (GB)</label>
+                    <input asp-for="Capacity" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Price" class="form-label">Price ($)</label>
+                    <input asp-for="Price" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Cache" class="form-label">Cache</label>
+                    <input asp-for="Cache" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FormFactor" class="form-label">Form Factor</label>
+                    <input asp-for="FormFactor" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProductUrl" class="form-label">Product URL</label>
+                    <input asp-for="ProductUrl" class="form-control" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
