@@ -1,0 +1,68 @@
+﻿@model PCBuddy_Backend.Models.Memory
+@{ ViewData["Title"] = "Edit Memory"; }
+
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark"><h4 class="mb-0">Edit Memory</h4></div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IsDeleted" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Price" class="form-label">Price ($)</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Speed" class="form-label">Speed</label>
+                    <input asp-for="Speed" class="form-control" />
+                    <span asp-validation-for="Speed" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Modules" class="form-label">Modules</label>
+                    <input asp-for="Modules" class="form-control" />
+                    <span asp-validation-for="Modules" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="CasLatency" class="form-label">CAS Latency</label>
+                    <input asp-for="CasLatency" class="form-control" />
+                    <span asp-validation-for="CasLatency" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Color" class="form-label">Color</label>
+                    <input asp-for="Color" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Voltage" class="form-label">Voltage</label>
+                    <input asp-for="Voltage" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProductUrl" class="form-label">Product URL</label>
+                    <input asp-for="ProductUrl" class="form-control" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts { @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} }
