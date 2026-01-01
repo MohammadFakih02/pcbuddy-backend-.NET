@@ -1,0 +1,97 @@
+﻿@model PCBuddy_Backend.Models.PowerSupply
+@{
+    ViewData["Title"] = "Create PSU";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white"><h4 class="mb-0">Add New Power Supply</h4></div>
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Price" class="form-label">Price ($)</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Wattage" class="form-label">Wattage (W)</label>
+                    <input asp-for="Wattage" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Efficiency" class="form-label">Efficiency (e.g. 80+ Gold)</label>
+                    <input asp-for="Efficiency" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Type" class="form-label">Type (e.g. ATX)</label>
+                    <input asp-for="Type" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Modular" class="form-label">Modular?</label>
+                    <select asp-for="Modular" class="form-select">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Color" class="form-label">Color</label>
+                    <input asp-for="Color" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Length" class="form-label">Length (mm)</label>
+                    <input asp-for="Length" class="form-control" />
+                </div>
+            </div>
+            <!-- Connectors -->
+            <h6 class="mt-3 border-bottom pb-2">Connectors</h6>
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label asp-for="Pcie8PinConnectors" class="form-label small">PCIe 8-Pin</label>
+                    <input asp-for="Pcie8PinConnectors" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label asp-for="Pcie6Plus2PinConnectors" class="form-label small">PCIe 6+2-Pin</label>
+                    <input asp-for="Pcie6Plus2PinConnectors" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label asp-for="Pcie12Plus4Pin12VHPWRConnectors" class="form-label small">12VHPWR (40 series)</label>
+                    <input asp-for="Pcie12Plus4Pin12VHPWRConnectors" class="form-control form-control-sm" />
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label asp-for="SataConnectors" class="form-label small">SATA</label>
+                    <input asp-for="SataConnectors" class="form-control form-control-sm" />
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProductUrl" class="form-label">Product URL</label>
+                    <input asp-for="ProductUrl" class="form-control" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

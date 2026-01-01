@@ -1,0 +1,65 @@
+﻿@using PCBuddy_Backend.Utils
+@model PCBuddy_Backend.Models.PowerSupply
+@{ ViewData["Title"] = "PSU Details"; }
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@Model.Name</h2>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl)) {
+                        <img src="@AIUtils.FormatImageUrl(Model.ImageUrl)" alt="@Model.Name" class="img-fluid rounded border p-2" style="max-height: 300px;" />
+                    } else { <div class="alert alert-secondary py-5">No Image Available</div> }
+                    
+                    <div class="mt-3">
+                        <h3 class="text-success">$@Model.Price</h3>
+                        @if (!string.IsNullOrEmpty(Model.ProductUrl)) {
+                            <a href="@Model.ProductUrl" target="_blank" class="btn btn-outline-primary btn-sm mt-2"><i class="fas fa-external-link-alt"></i> View Product</a>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <h5 class="card-title border-bottom pb-2">Specifications</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Manufacturer</dt> <dd class="col-sm-8">@Model.Manufacturer</dd>
+                        <dt class="col-sm-4">Wattage</dt> <dd class="col-sm-8">@Model.Wattage W</dd>
+                        <dt class="col-sm-4">Efficiency</dt> <dd class="col-sm-8">@Model.Efficiency</dd>
+                        <dt class="col-sm-4">Modular</dt> 
+                        <dd class="col-sm-8">@(Model.Modular == true ? "Yes" : "No")</dd>
+                        <dt class="col-sm-4">Type</dt> <dd class="col-sm-8">@Model.Type</dd>
+                        <dt class="col-sm-4">Color</dt> <dd class="col-sm-8">@Model.Color</dd>
+                        <dt class="col-sm-4">Updated At</dt> <dd class="col-sm-8">@Model.UpdatedAt.ToLocalTime()</dd>
+                    </dl>
+                    
+                    <h5 class="card-title border-bottom pb-2 mt-3">Connectors</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            PCIe 6+2 Pin
+                            <span class="badge bg-primary rounded-pill">@Model.Pcie6Plus2PinConnectors</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            PCIe 8 Pin
+                            <span class="badge bg-primary rounded-pill">@Model.Pcie8PinConnectors</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            12VHPWR (40 Series)
+                            <span class="badge bg-primary rounded-pill">@Model.Pcie12Plus4Pin12VHPWRConnectors</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            SATA
+                            <span class="badge bg-primary rounded-pill">@Model.SataConnectors</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

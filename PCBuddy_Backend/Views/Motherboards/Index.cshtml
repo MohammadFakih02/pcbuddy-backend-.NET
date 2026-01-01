@@ -1,0 +1,53 @@
+﻿@using PCBuddy_Backend.Utils
+@model IEnumerable<PCBuddy_Backend.Models.Motherboard>
+
+@{
+    ViewData["Title"] = "Manage Motherboards";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Manage Motherboards</h2>
+    <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Motherboard</a>
+</div>
+
+<table class="table table-striped table-hover shadow-sm bg-white rounded">
+    <thead class="table-dark">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Socket</th>
+            <th>Form Factor</th>
+            <th>Price</th>
+            <th>RAM Slots</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@AIUtils.FormatImageUrl(item.ImageUrl)" style="width: 50px; height: 50px; object-fit: contain;" />
+                    }
+                    else
+                    {
+
+                        <span class="text-muted">No Img</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Socket)</td>
+                <td>@Html.DisplayFor(modelItem => item.FormFactor)</td>
+                <td>$@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemorySlots)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info"><i class="fas fa-info-circle"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

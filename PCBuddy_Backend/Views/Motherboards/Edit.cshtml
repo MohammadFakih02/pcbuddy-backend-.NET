@@ -1,0 +1,87 @@
+﻿@model PCBuddy_Backend.Models.Motherboard
+@{
+    ViewData["Title"] = "Edit Motherboard";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark"><h4 class="mb-0">Edit Motherboard</h4></div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IsDeleted" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Price" class="form-label">Price ($)</label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Socket" class="form-label">Socket</label>
+                    <input asp-for="Socket" class="form-control" />
+                    <span asp-validation-for="Socket" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Chipset" class="form-label">Chipset</label>
+                    <input asp-for="Chipset" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FormFactor" class="form-label">Form Factor</label>
+                    <input asp-for="FormFactor" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="MemorySlots" class="form-label">Memory Slots</label>
+                    <input asp-for="MemorySlots" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="MemoryMax" class="form-label">Max Memory (GB)</label>
+                    <input asp-for="MemoryMax" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="MemoryType" class="form-label">Memory Type</label>
+                    <input asp-for="MemoryType" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="M2Slots" class="form-label">M.2 Slots</label>
+                    <input asp-for="M2Slots" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="WirelessNetworking" class="form-label">Wifi / BT</label>
+                    <input asp-for="WirelessNetworking" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProductUrl" class="form-label">Product URL</label>
+                    <input asp-for="ProductUrl" class="form-control" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}
