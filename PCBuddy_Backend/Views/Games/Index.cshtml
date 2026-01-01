@@ -1,11 +1,12 @@
-﻿@model IEnumerable<PCBuddy_Backend.Models.Game>
+﻿@using PCBuddy_Backend.Utils
+@model PaginatedList<PCBuddy_Backend.Models.Game>
 
 @{
     ViewData["Title"] = "Manage Games";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Manage Games</h2>
+    <h2>Manage Games (@Model.TotalPages Pages)</h2>
     <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Game</a>
 </div>
 
@@ -16,7 +17,7 @@
             <th>Min CPU</th>
             <th>Min GPU</th>
             <th>Min RAM</th>
-            <th>Storage Size</th>
+            <th>Storage</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -38,3 +39,5 @@
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="Model" />

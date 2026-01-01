@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PCBuddy_Backend.Models.Cpu>
+﻿@using PCBuddy_Backend.Utils
+@model PaginatedList<PCBuddy_Backend.Models.Cpu>
 
 @{
     ViewData["Title"] = "Manage CPUs";
@@ -31,6 +32,7 @@
                     }
                     else
                     {
+
                         <span class="text-muted">No Img</span>
                     }
                 </td>
@@ -47,3 +49,5 @@
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="Model" />

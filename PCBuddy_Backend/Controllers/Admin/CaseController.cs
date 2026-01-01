@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCBuddy_Backend.Data;
 using PCBuddy_Backend.Models;
+using PCBuddy_Backend.Utils;
 
 namespace PCBuddy_Backend.Controllers.Admin
 {
@@ -18,9 +19,11 @@ namespace PCBuddy_Backend.Controllers.Admin
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            return View(await _context.Cases.Where(c => !c.IsDeleted).ToListAsync());
+            int pageSize = 100;
+            var cases = _context.Cases.Where(c => !c.IsDeleted).OrderBy(c => c.Name);
+            return View(await PaginatedList<Case>.CreateAsync(cases.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         [HttpGet("Details/{id}")]

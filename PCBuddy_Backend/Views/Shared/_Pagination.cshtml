@@ -1,0 +1,69 @@
+﻿@model PCBuddy_Backend.Utils.IPaginatedList
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+    // Config: How many pages to show around the current page
+    int radius = 3;
+}
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        <!-- Previous Button -->
+        <li class="page-item @prevDisabled">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+
+        <!-- First Page -->
+        @if (Model.PageIndex > radius + 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="1">1</a>
+            </li>
+            @if (Model.PageIndex > radius + 2)
+            {
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+        }
+
+        <!-- Page Window -->
+        @for (int i = Math.Max(1, Model.PageIndex - radius); i <= Math.Min(Model.TotalPages, Model.PageIndex + radius); i++)
+        {
+            if (i == Model.PageIndex)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@i</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+        }
+
+        <!-- Last Page -->
+        @if (Model.PageIndex < Model.TotalPages - radius)
+        {
+            @if (Model.PageIndex < Model.TotalPages - radius - 1)
+            {
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@Model.TotalPages">@Model.TotalPages</a>
+            </li>
+        }
+
+        <!-- Next Button -->
+        <li class="page-item @nextDisabled">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>

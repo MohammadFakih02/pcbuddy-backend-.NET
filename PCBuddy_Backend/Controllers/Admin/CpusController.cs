@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCBuddy_Backend.Data;
 using PCBuddy_Backend.Models;
+using PCBuddy_Backend.Utils;
 
 namespace PCBuddy_Backend.Controllers.Admin
 {
@@ -17,12 +18,12 @@ namespace PCBuddy_Backend.Controllers.Admin
             _context = context;
         }
 
-        // GET: Admin/Cpus
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            // Only show active (non-deleted) items by default
-            return View(await _context.Cpus.Where(c => !c.IsDeleted).ToListAsync());
+            int pageSize = 100;
+            var cpus = _context.Cpus.Where(c => !c.IsDeleted).OrderBy(c => c.Name);
+            return View(await PaginatedList<Cpu>.CreateAsync(cpus.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Admin/Cpus/Details/5

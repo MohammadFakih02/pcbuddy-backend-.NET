@@ -1,5 +1,5 @@
 ﻿@using PCBuddy_Backend.Utils
-@model IEnumerable<PCBuddy_Backend.Models.PowerSupply>
+@model PaginatedList<PCBuddy_Backend.Models.PowerSupply>
 
 @{
     ViewData["Title"] = "Manage Power Supplies";
@@ -61,3 +61,5 @@
         }
     </tbody>
 </table>
+
+<partial name="_Pagination" model="Model" />
