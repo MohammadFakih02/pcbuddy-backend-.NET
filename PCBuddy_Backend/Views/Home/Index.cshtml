@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Users</div>
+            <div class="card-body">
+                <h2 class="card-title">@ViewBag.UserCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Saved Builds</div>
+            <div class="card-body">
+                <h2 class="card-title">@ViewBag.PCCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Games Database</div>
+            <div class="card-body">
+                <h2 class="card-title">@ViewBag.GamesCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Total CPUs</div>
+            <div class="card-body">
+                <h2 class="card-title">@ViewBag.CpuCount</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h4>Welcome to the Admin Panel</h4>
+    <p>Use the sidebar to manage hardware components and users.</p>
+</div>

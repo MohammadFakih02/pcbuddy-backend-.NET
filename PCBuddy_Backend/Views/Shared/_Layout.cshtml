@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PCBuddy Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            display: flex;
+            flex: 1;
+        }
+
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+            #sidebar .nav-link {
+                color: rgba(255,255,255,.8);
+                padding: 10px 20px;
+            }
+
+                #sidebar .nav-link:hover {
+                    color: #fff;
+                    background: rgba(255,255,255,0.1);
+                }
+
+        #content {
+            width: 100%;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 px-3">PCBuddy Admin</span>
+            <form asp-controller="AdminAccount" asp-action="Logout" method="post" class="d-flex">
+                <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <nav id="sidebar">
+            <ul class="list-unstyled components py-4">
+                <li><a href="/" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a></li>
+                <hr class="bg-light" />
+                <div class="px-3 text-uppercase small text-muted">Hardware</div>
+                <li>
+                    <a href="/Admin/Cpus" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cpus" ? "active" : "")">
+                        <i class="fas fa-microchip me-2"></i> CPUs
+                    </a>
+                </li>
+                <!-- GPUs -->
+                <li>
+                    <a href="/Admin/Gpus" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Gpus" ? "active" : "")">
+                        <i class="fas fa-tv me-2"></i> GPUs
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Memory" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Memory" ? "active" : "")">
+                        <i class="fas fa-memory me-2"></i> Memory
+                    </a>
+                </li>
+                <li><a href="#" class="nav-link">Storage</a></li>
+                <li><a href="#" class="nav-link">Motherboards</a></li>
+                    <li><a href="#" class="nav-link">Power Supplies</a></li>
+                    <li><a href="#" class="nav-link">Cases</a></li>
+                <hr class="bg-light" />
+                <li><a href="#" class="nav-link"><i class="fas fa-users me-2"></i> Users</a></li>
+            </ul>
+        </nav>
+
+        <div id="content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
