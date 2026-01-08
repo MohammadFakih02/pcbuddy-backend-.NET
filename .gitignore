@@ -365,3 +365,4 @@ FodyWeavers.xsd
 .env
 PCBuddy_Backend/.env
 **/.env
+wwwroot/

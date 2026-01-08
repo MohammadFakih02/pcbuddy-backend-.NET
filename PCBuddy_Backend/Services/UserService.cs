@@ -64,19 +64,21 @@ namespace PCBuddy_Backend.Services
             );
         }
 
-        // Updated to handle IFormFile
         public async Task<UserProfileDto> UpdateProfilePicture(int userId, IFormFile file)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null) throw new Exception("User not found");
 
-            // 1. Delete old image if it exists
-            FileUtils.DeleteFile(user.ProfilePicture, _environment.WebRootPath);
+            string webRootPath = _environment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = Path.Combine(_environment.ContentRootPath, "wwwroot");
+            }
 
-            // 2. Save new image
-            var relativePath = await FileUtils.SaveProfilePictureAsync(file, _environment.WebRootPath);
+            FileUtils.DeleteFile(user.ProfilePicture, webRootPath);
 
-            // 3. Update DB
+            var relativePath = await FileUtils.SaveProfilePictureAsync(file, webRootPath);
+
             user.ProfilePicture = relativePath;
             await _context.SaveChangesAsync();
 
