@@ -11,7 +11,7 @@ A robust **Hybrid ASP.NET Core 8 Application** that serves as the backbone for t
 ### 📱 API (Mobile Backend)
 *   **Secure Authentication:** Utilizes **JWT (JSON Web Token)** for stateless user authentication.
 *   **Delta Sync:** An optimized synchronization system that sends only modified or new data to the frontend, supporting an **Offline-first approach**.
-*   **AI Integration:** Powered by **Google Gemini 1.5 Flash** for:
+*   **AI Integration:** Powered by **Google Gemini 2.5 Flash Light** for:
     *   Intelligent PC Part recommendations.
     *   Laptop assessments and performance estimates.
     *   Compatibility checking and FPS predictions.
