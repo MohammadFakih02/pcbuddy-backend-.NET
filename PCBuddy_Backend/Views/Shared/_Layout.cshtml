@@ -4,142 +4,204 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PCBuddy Admin</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-bg: #212529;
+            --sidebar-hover: #2c3034;
+            --primary-color: #0d6efd;
+        }
+
         body {
-            display: flex;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f9;
+            overflow-x: hidden;
+        }
+
+        #sidebar-wrapper {
             min-height: 100vh;
-            flex-direction: column;
+            margin-left: calc(var(--sidebar-width) * -1);
+            transition: margin .25s ease-out;
+            background-color: var(--sidebar-bg);
+            width: var(--sidebar-width);
+            position: fixed;
+            z-index: 1000;
         }
 
-        .wrapper {
-            display: flex;
-            flex: 1;
-        }
-
-        #sidebar {
-            min-width: 250px;
-            max-width: 250px;
-            background: #343a40;
-            color: #fff;
-            transition: all 0.3s;
-        }
-
-            #sidebar .nav-link {
-                color: rgba(255,255,255,.8);
-                padding: 10px 20px;
-                border-left: 3px solid transparent;
+            #sidebar-wrapper .sidebar-heading {
+                padding: 1.2rem 1.5rem;
+                font-size: 1.2rem;
+                color: white;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
             }
 
-                #sidebar .nav-link:hover {
-                    color: #fff;
-                    background: rgba(255,255,255,0.1);
-                }
+            #sidebar-wrapper .list-group {
+                width: var(--sidebar-width);
+            }
 
-                #sidebar .nav-link.active {
-                    color: #fff;
-                    background: rgba(255,255,255,0.1);
-                    border-left: 3px solid #0d6efd;
-                }
+        .list-group-item {
+            background-color: transparent;
+            color: rgba(255,255,255,0.75);
+            border: none;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+        }
 
-        #content {
-            width: 100%;
-            padding: 20px;
-            overflow-x: auto;
+            .list-group-item:hover {
+                background-color: var(--sidebar-hover);
+                color: #fff;
+            }
+
+            .list-group-item.active {
+                background-color: var(--primary-color);
+                color: #fff;
+                font-weight: 600;
+                border-left: 4px solid #fff;
+            }
+
+        .sidebar-divider {
+            color: #6c757d;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem 1.5rem .5rem;
+            font-weight: 600;
+        }
+
+        #page-content-wrapper {
+            min-width: 100vw;
+            transition: margin .25s ease-out;
+        }
+
+        body.sb-sidenav-toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+
+        body.sb-sidenav-toggled #page-content-wrapper {
+            margin-left: var(--sidebar-width);
+        }
+
+        .navbar-custom {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,.04);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark border-bottom border-secondary">
-        <div class="container-fluid">
-            <a class="navbar-brand mb-0 h1 px-3" href="/">
-                <i class="fas fa-desktop me-2"></i>PCBuddy Admin
-            </a>
-            <form asp-controller="AdminAccount" asp-action="Logout" method="post" class="d-flex">
-                <button class="btn btn-outline-light btn-sm" type="submit">
-                    <i class="fas fa-sign-out-alt me-1"></i> Logout
-                </button>
-            </form>
+
+    <div class="d-flex" id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom border-secondary">
+                <i class="fas fa-desktop me-2"></i>PCBuddy
+            </div>
+
+            <div class="list-group list-group-flush my-3">
+
+                @{
+                    string currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+                    string GetActiveClass(string controllerName) => currentController == controllerName ? "active" : "";
+                }
+
+                <a asp-controller="Home" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Home")">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+
+                <div class="sidebar-divider">Hardware</div>
+
+                <a asp-controller="Cpus" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Cpus")">
+                    <i class="fas fa-microchip me-2"></i>CPUs
+                </a>
+                <a asp-controller="Gpus" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Gpus")">
+                    <i class="fas fa-tv me-2"></i>GPUs
+                </a>
+                <a asp-controller="Memory" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Memory")">
+                    <i class="fas fa-memory me-2"></i>Memory
+                </a>
+                <a asp-controller="Storage" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Storage")">
+                    <i class="fas fa-database me-2"></i>Storage
+                </a>
+                <a asp-controller="Motherboards" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Motherboards")">
+                    <i class="fas fa-server me-2"></i>Motherboards
+                </a>
+                <a asp-controller="PowerSupplies" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("PowerSupplies")">
+                    <i class="fas fa-plug me-2"></i>Power Supplies
+                </a>
+                <a asp-controller="Cases" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Cases")">
+                    <i class="fas fa-box me-2"></i>Cases
+                </a>
+
+                <div class="sidebar-divider">Software & Users</div>
+
+                <a asp-controller="Games" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Games")">
+                    <i class="fas fa-gamepad me-2"></i>Games
+                </a>
+                <a asp-controller="Users" asp-action="Index" class="list-group-item list-group-item-action @GetActiveClass("Users")">
+                    <i class="fas fa-users me-2"></i>Users
+                </a>
+            </div>
         </div>
-    </nav>
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light navbar-custom border-bottom px-3">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-dark" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
 
-    <div class="wrapper">
-        <nav id="sidebar">
-            <ul class="list-unstyled components py-4">
-                <!-- Dashboard -->
-                <li>
-                    <a href="/" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
-                        <i class="fas fa-home me-2"></i> Dashboard
-                    </a>
-                </li>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <hr class="bg-light mx-3" />
-                <div class="px-3 text-uppercase small text-muted mb-2">Hardware</div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i> Admin User
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="AdminAccount" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
 
-                <!-- Hardware Links -->
-                <li>
-                    <a href="/Admin/Cpus" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cpus" ? "active" : "")">
-                        <i class="fas fa-microchip me-2"></i> CPUs
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/Gpus" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Gpus" ? "active" : "")">
-                        <i class="fas fa-tv me-2"></i> GPUs
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/Memory" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Memory" ? "active" : "")">
-                        <i class="fas fa-memory me-2"></i> Memory
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/Storage" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Storage" ? "active" : "")">
-                        <i class="fas fa-database me-2"></i> Storage
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/Motherboards" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Motherboards" ? "active" : "")">
-                        <i class="fas fa-server me-2"></i> Motherboards
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/PowerSupplies" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "PowerSupplies" ? "active" : "")">
-                        <i class="fas fa-plug me-2"></i> Power Supplies
-                    </a>
-                </li>
-                <li>
-                    <a href="/Admin/Cases" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Cases" ? "active" : "")">
-                        <i class="fas fa-box me-2"></i> Cases
-                    </a>
-                </li>
-
-                <hr class="bg-light mx-3" />
-                <div class="px-3 text-uppercase small text-muted mb-2">Software & Users</div>
-
-                <!-- Games -->
-                <li>
-                    <a href="/Admin/Games" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Games" ? "active" : "")">
-                        <i class="fas fa-gamepad me-2"></i> Games
-                    </a>
-                </li>
-
-                <!-- Users -->
-                <li>
-                    <a href="/Admin/Users" class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")">
-                        <i class="fas fa-users me-2"></i> Users
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <div id="content">
-            @RenderBody()
+            <div class="container-fluid px-4 py-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        var toggleButton = document.getElementById("sidebarToggle");
+        var body = document.body;
+
+        toggleButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            body.classList.toggle("sb-sidenav-toggled");
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
