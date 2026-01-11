@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using PCBuddy_Backend.DTOs;
-using PCBuddy_Backend.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace PCBuddy_Backend.Services
 {
@@ -20,83 +19,106 @@ namespace PCBuddy_Backend.Services
             await conn.OpenAsync();
 
             DateTime syncTimestamp = DateTime.UtcNow;
-
             string dateFilter = lastSync.HasValue ? "WHERE UpdatedAt > @LastSync" : "";
 
+            string? GetStringOrNull(SqlDataReader r, int ordinal) => r.IsDBNull(ordinal) ? null : r.GetString(ordinal);
 
-            var cpus = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Cpus {dateFilter}", lastSync, r =>
-                new CpuDto(
+            // 1. CPU
+            var cpus = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Cpus {dateFilter}",
+                lastSync, r => new CpuDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var gpus = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Gpus {dateFilter}", lastSync, r =>
-                new GpuDto(
+            // 2. GPU
+            var gpus = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Gpus {dateFilter}",
+                lastSync, r => new GpuDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var memories = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Memory {dateFilter}", lastSync, r =>
-                new MemoryDto(
+            // 3. Memory
+            var memories = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Memory {dateFilter}",
+                lastSync, r => new MemoryDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var storages = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Storages {dateFilter}", lastSync, r =>
-                new StorageDto(
+            // 4. Storage
+            var storages = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Storages {dateFilter}",
+                lastSync, r => new StorageDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var motherboards = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Motherboards {dateFilter}", lastSync, r =>
-                new MotherboardDto(
+            // 5. Motherboards
+            var motherboards = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Motherboards {dateFilter}",
+                lastSync, r => new MotherboardDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var powerSupplies = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM PowerSupplies {dateFilter}", lastSync, r =>
-                new PowerSupplyDto(
+            // 6. Power Supplies
+            var powerSupplies = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM PowerSupplies {dateFilter}",
+                lastSync, r => new PowerSupplyDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
 
-            var cases = await ReadParts(conn, $"SELECT Id, Name, Price, IsDeleted FROM Cases {dateFilter}", lastSync, r =>
-                new CaseDto(
+            // 7. Cases
+            var cases = await ReadParts(conn,
+                $"SELECT Id, Name, Price, ImageUrl, IsDeleted FROM Cases {dateFilter}",
+                lastSync, r => new CaseDto(
                     r.GetInt32(0),
                     r.GetString(1),
                     r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.GetBoolean(3)
+                    GetStringOrNull(r, 3),
+                    r.GetBoolean(4)
                 ));
+
 
             var games = await ReadParts(conn,
-                $"""
-                SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize, IsDeleted
-                FROM Games
-                {dateFilter}
-                """,
-                lastSync,
-                r => new GameSyncDto(
-                    r.GetInt32(0),
-                    r.GetString(1),
-                    r.IsDBNull(2) ? null : r.GetString(2),
-                    r.IsDBNull(3) ? null : r.GetString(3),
-                    r.IsDBNull(4) ? null : Convert.ToDecimal(r.GetDouble(4)),
-                    r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5)),
-                    r.GetBoolean(6)
-                )
-            );
+               $"""
+               SELECT Id, Name, Cpu, GraphicsCard, Memory, FileSize, IsDeleted
+               FROM Games
+               {dateFilter}
+               """,
+               lastSync,
+               r => new GameSyncDto(
+                   r.GetInt32(0),
+                   r.GetString(1),
+                   r.IsDBNull(2) ? null : r.GetString(2),
+                   r.IsDBNull(3) ? null : r.GetString(3),
+                   r.IsDBNull(4) ? null : Convert.ToDecimal(r.GetDouble(4)),
+                   r.IsDBNull(5) ? null : Convert.ToDecimal(r.GetDouble(5)),
+                   r.GetBoolean(6)
+               )
+           );
+
             var prebuilts = await ReadParts(conn,
                 $"SELECT Id, Name, TotalPrice, Rating, ImageUrl, IsDeleted FROM PrebuiltPCs {dateFilter}",
                 lastSync,
@@ -111,15 +133,7 @@ namespace PCBuddy_Backend.Services
             );
 
             return new SyncResponseDto(
-                cpus,
-                gpus,
-                memories,
-                storages,
-                motherboards,
-                powerSupplies,
-                cases,
-                games,
-                prebuilts,
+                cpus, gpus, memories, storages, motherboards, powerSupplies, cases, games, prebuilts,
                 syncTimestamp.ToString("o")
             );
         }
@@ -128,12 +142,10 @@ namespace PCBuddy_Backend.Services
         {
             var list = new List<T>();
             using var cmd = new SqlCommand(query, conn);
-
             if (lastSync.HasValue)
             {
                 cmd.Parameters.Add(new SqlParameter("@LastSync", System.Data.SqlDbType.DateTime2) { Value = lastSync.Value });
             }
-
             using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
