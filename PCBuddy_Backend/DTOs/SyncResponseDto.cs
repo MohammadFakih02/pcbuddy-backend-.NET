@@ -9,6 +9,7 @@
         List<PowerSupplyDto> PowerSupplies,
         List<CaseDto> Cases,
         List<GameSyncDto> Games,
+        List<PrebuiltPcDto> Prebuilts,
         string version
     );
 }

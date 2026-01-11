@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
-using PCBuddy_Backend.DTOs;
 using Microsoft.Extensions.Configuration;
+using PCBuddy_Backend.DTOs;
+using PCBuddy_Backend.Models;
 
 namespace PCBuddy_Backend.Services
 {
@@ -96,6 +97,18 @@ namespace PCBuddy_Backend.Services
                     r.GetBoolean(6)
                 )
             );
+            var prebuilts = await ReadParts(conn,
+                $"SELECT Id, Name, TotalPrice, Rating, ImageUrl, IsDeleted FROM PrebuiltPCs {dateFilter}",
+                lastSync,
+                r => new PrebuiltPcDto(
+                    r.GetInt32(0),
+                    r.GetString(1),
+                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                    r.IsDBNull(3) ? 0 : r.GetDouble(3),
+                    r.IsDBNull(4) ? null : r.GetString(4),
+                    r.GetBoolean(5)
+                )
+            );
 
             return new SyncResponseDto(
                 cpus,
@@ -106,6 +119,7 @@ namespace PCBuddy_Backend.Services
                 powerSupplies,
                 cases,
                 games,
+                prebuilts,
                 syncTimestamp.ToString("o")
             );
         }

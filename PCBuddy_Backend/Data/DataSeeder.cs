@@ -123,6 +123,80 @@ namespace PCBuddy_Backend.Data
                     Console.WriteLine($" Seeded {items.Count} Games");
                 }
             }
+            if (!context.PrebuiltPCs.Any())
+            {
+                Console.WriteLine(" Seeding Prebuilt PCs...");
+
+                var adminUser = context.Users.FirstOrDefault(u => u.Role == Role.ADMIN);
+                if (adminUser == null)
+                {
+                    adminUser = new User
+                    {
+                        Username = "SystemBuilder",
+                        Email = "builder@pcbuddy.com",
+                        Password = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                        Role = Role.ADMIN,
+                        Name = "PCBuddy Expert"
+                    };
+                    context.Users.Add(adminUser);
+                    context.SaveChanges();
+                }
+
+                var cpuHigh = context.Cpus.OrderByDescending(p => p.Price).FirstOrDefault();
+                var cpuMid = context.Cpus.FirstOrDefault(p => p.Price < 300 && p.Price > 150);
+
+                var gpuHigh = context.Gpus.OrderByDescending(p => p.Price).FirstOrDefault();
+                var gpuMid = context.Gpus.FirstOrDefault(p => p.Price < 500 && p.Price > 200);
+
+                var ram = context.Memory.FirstOrDefault();
+                var mobo = context.Motherboards.FirstOrDefault();
+                var psu = context.PowerSupplies.FirstOrDefault();
+                var storage = context.Storages.FirstOrDefault();
+                var pcCase = context.Cases.FirstOrDefault();
+
+                if (cpuHigh != null && gpuHigh != null && pcCase != null)
+                {
+                    var builds = new List<PrebuiltPC>
+                    {
+                        new PrebuiltPC
+                        {
+                            Name = "The Ultimate Destroyer",
+                            EngineerId = adminUser.Id,
+                            CpuId = cpuHigh.Id,
+                            GpuId = gpuHigh.Id,
+                            MemoryId = ram?.Id,
+                            MotherboardId = mobo?.Id,
+                            PowerSupplyId = psu?.Id,
+                            StorageId = storage?.Id,
+                            CaseId = pcCase?.Id,
+                            TotalPrice = (cpuHigh.Price ?? 0) + (gpuHigh.Price ?? 0) + 500,
+                            Rating = 5.0,
+                            ImageUrl = pcCase.ImageUrl,
+                            UpdatedAt = DateTime.UtcNow
+                        },
+                        new PrebuiltPC
+                        {
+                            Name = "Value Gaming Beast",
+                            EngineerId = adminUser.Id,
+                            CpuId = cpuMid?.Id ?? cpuHigh.Id,
+                            GpuId = gpuMid?.Id ?? gpuHigh.Id,
+                            MemoryId = ram?.Id,
+                            MotherboardId = mobo?.Id,
+                            PowerSupplyId = psu?.Id,
+                            StorageId = storage?.Id,
+                            CaseId = pcCase?.Id,
+                            TotalPrice = (cpuMid?.Price ?? 0) + (gpuMid?.Price ?? 0) + 400,
+                            Rating = 4.5,
+                            ImageUrl = pcCase.ImageUrl,
+                            UpdatedAt = DateTime.UtcNow
+                        }
+                    };
+
+                    context.PrebuiltPCs.AddRange(builds);
+                    context.SaveChanges();
+                    Console.WriteLine($" Seeded {builds.Count} Prebuilt PCs");
+                }
+            }
         }
     }
 }
