@@ -144,13 +144,23 @@ namespace PCBuddy_Backend.Services
         {
             var prompt = $@"
             Given the following laptop name and optional details, provide an assessment including specs, ratings, expected FPS, and thermal performance.
+            
             Laptop Name: ""{laptopName}""
             Details: ""{details ?? "None"}""
+
+            CRITICAL INSTRUCTIONS:
+            1. For 'ratings', provide a SINGLE number out of 10 (e.g., ""6/10"" or ""7""). DO NOT provide ranges (e.g., do NOT say ""5-7""). If specs vary, estimate an average score.
+            2. For 'specs', if exact details are missing, assume the most common configuration for this model.
+
             Return a valid JSON object with this structure:
             {{
                 ""laptopName"": ""string"",
                 ""specs"": {{ ""cpu"": """", ""gpu"": """", ""ram"": """", ""storage"": """", ""display"": """" }},
-                ""ratings"": {{ ""overall"": ""0-10"", ""cpu"": ""0-10"", ""gpu"": ""0-10"" }},
+                ""ratings"": {{ 
+                    ""overall"": ""Single number/10 (e.g. 7/10)"", 
+                    ""cpu"": ""Single number/10"", 
+                    ""gpu"": ""Single number/10"" 
+                }},
                 ""fps"": {{
                     ""Cyberpunk 2077"": {{ ""low"": 0, ""medium"": 0, ""high"": 0, ""ultra"": 0 }},
                     ""Red Dead Redemption 2"": {{ ""low"": 0, ""medium"": 0, ""high"": 0, ""ultra"": 0 }},
