@@ -120,17 +120,24 @@ namespace PCBuddy_Backend.Services
            );
 
             var prebuilts = await ReadParts(conn,
-                $"SELECT Id, Name, TotalPrice, Rating, ImageUrl, IsDeleted FROM PrebuiltPCs {dateFilter}",
-                lastSync,
-                r => new PrebuiltPcDto(
-                    r.GetInt32(0),
-                    r.GetString(1),
-                    r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
-                    r.IsDBNull(3) ? 0 : r.GetDouble(3),
-                    r.IsDBNull(4) ? null : r.GetString(4),
-                    r.GetBoolean(5)
-                )
-            );
+                            $"SELECT Id, Name, TotalPrice, Rating, ImageUrl, IsDeleted, CpuId, GpuId, MemoryId, StorageId, MotherboardId, PowerSupplyId, CaseId FROM PrebuiltPCs {dateFilter}",
+                            lastSync,
+                            r => new PrebuiltPcDto(
+                                r.GetInt32(0),
+                                r.GetString(1),
+                                r.IsDBNull(2) ? 0 : Convert.ToDecimal(r.GetDouble(2)),
+                                r.IsDBNull(3) ? 0 : r.GetDouble(3),
+                                r.IsDBNull(4) ? null : r.GetString(4),
+                                r.GetBoolean(5),
+                                r.IsDBNull(6) ? null : r.GetInt32(6),
+                                r.IsDBNull(7) ? null : r.GetInt32(7),
+                                r.IsDBNull(8) ? null : r.GetInt32(8),
+                                r.IsDBNull(9) ? null : r.GetInt32(9),
+                                r.IsDBNull(10) ? null : r.GetInt32(10),
+                                r.IsDBNull(11) ? null : r.GetInt32(11),
+                                r.IsDBNull(12) ? null : r.GetInt32(12)
+                            )
+                        );
 
             return new SyncResponseDto(
                 cpus, gpus, memories, storages, motherboards, powerSupplies, cases, games, prebuilts,
